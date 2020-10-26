@@ -1,21 +1,17 @@
 module.exports = {
-  parser: "babel-eslint",
+  root: true,
   env: {
-    es6: true,
-    node: true,
-    browser: true
+    node: true
+  },
+  'extends': [
+    'plugin:vue/essential',
+    '@vue/standard'
+  ],
+  rules: {
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   },
   parserOptions: {
-    ecmaVersion: 6,
-    sourceType: "module",
-    ecmaFeatures: {
-      jsx: true
-    }
-  },
-  plugins: ["react"],
-  extends: [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:prettier/recommended"
-  ]
-};
+    parser: 'babel-eslint'
+  }
+}
