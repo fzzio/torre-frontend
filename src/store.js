@@ -7,16 +7,23 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    settings: { initialSearchQuery: 'eminem', searchQuery: '', panelType: 'card', bookmarkIcon: 'fa-star', perPage: '20', youtubeLink: 'false' },
-    albums: [],
-    albumTracks: [],
-    bookmarkAlbums: [],
+    settings: {
+      initialSearchQuery: '',
+      searchQuery: '',
+      panelType: 'card',
+      bookmarkIcon: 'fa-star',
+      perPage: '20',
+      youtubeLink: 'false'
+    },
+    candidates: [],
+    candidateBio: [],
+    bookmarkCandidates: [],
     searchFailed: false,
-    albumTracksFailed: false,
+    candidateBioFailed: false,
     recentSearch: [],
     showRecentSearchBox: false,
-    isAlbumLoading: false,
-    isAlbumTracksLoading: false,
+    isCandidatesLoading: false,
+    isCandidateBioLoading: false,
     language: 'en_us',
     pageType: 'search',
     appError: null
@@ -28,29 +35,29 @@ export default new Vuex.Store({
     INITIAL_SEARCH_QUERY: (state) => {
       return state.settings.initialSearchQuery
     },
-    GET_ALBUMS: (state) => {
-      return state.albums
+    GET_CANDIDATES: (state) => {
+      return state.candidates
     },
-    GET_ALBUM_TRACKS: (state) => {
-      return state.albumTracks
+    GET_CANDIDATE_BIO: (state) => {
+      return state.candidateBio
     },
     GET_RECENT_SEARCH: (state) => {
       return state.recentSearch
     },
-    IS_ALBUM_LOADING: (state) => {
-      return state.isAlbumLoading
+    IS_CANDIDATES_LOADING: (state) => {
+      return state.isCandidatesLoading
     },
-    IS_ALBUM_TRACKS_LOADING: (state) => {
-      return state.isAlbumTracksLoading
+    IS_CANDIDATE_BIO_LOADING: (state) => {
+      return state.isCandidateBioLoading
     },
     SEARCH_FAILED: (state) => {
       return state.searchFailed
     },
-    ALBUM_TRACKS_FAILED: (state) => {
-      return state.albumTracksFailed
+    CANDIDATE_BIO_FAILED: (state) => {
+      return state.candidateBioFailed
     },
-    BOOKMARK_ALBUMS: (state) => {
-      return state.bookmarkAlbums.reverse()
+    BOOKMARK_CANDIDATES: (state) => {
+      return state.bookmarkCandidates.reverse()
     },
     PAGE_TYPE: (state) => {
       return state.pageType
@@ -67,11 +74,11 @@ export default new Vuex.Store({
       state.pageType = 'search'
       state.settings.searchQuery = query
     },
-    SET_ALBUM: (state, data) => {
-      state.albums = data
+    SET_CANDIDATES: (state, data) => {
+      state.candidates = data
     },
-    SET_ALBUM_TRACKS: (state, data) => {
-      state.albumTracks = data
+    SET_CANDIDATE_BIO: (state, data) => {
+      state.candidateBio = data
     },
     SEARCH_FAILED: (state, action) => {
       state.searchFailed = action
@@ -81,20 +88,20 @@ export default new Vuex.Store({
       state.recentSearch = data
     },
     CLEAR_SEARCH: (state) => {
-      state.albums = []
+      state.candidates = []
       state.settings.searchQuery = ''
     },
     TOGGLE_RECENT_SEARCH: (state) => {
       state.showRecentSearchBox = !state.showRecentSearchBox
     },
-    SET_BOOKMARK_ALBUMS: (state, albums) => {
-      state.bookmarkAlbums = albums
+    SET_BOOKMARK_CANDIDATES: (state, candidates) => {
+      state.bookmarkCandidates = candidates
     },
-    IS_ALBUM_LOADING: (state, action) => {
-      state.isAlbumLoading = action
+    IS_CANDIDATES_LOADING: (state, action) => {
+      state.isCandidatesLoading = action
     },
-    IS_ALBUM_TRACKS_LOADING: (state, action) => {
-      state.isAlbumTracksLoading = action
+    IS_CANDIDATE_BIO_LOADING: (state, action) => {
+      state.isCandidateBioLoading = action
     },
     SET_PAGE_TYPE: (state, type) => {
       if (type === 'bookmarks') { state.settings.searchQuery = '' }
@@ -103,12 +110,12 @@ export default new Vuex.Store({
     SET_SETTINGS: (state, settings) => {
       state.settings = settings
     },
-    SET_ALBUM_TRACKS_FAILED: (state, action) => {
-      state.albumTracksFailed = action
-      state.albumTracks = []
+    SET_CANDIDATE_BIO_FAILED: (state, action) => {
+      state.candidateBioFailed = action
+      state.candidateBio = []
     },
-    RESET_ALBUM_TRACKS: (state) => {
-      state.albumTracks = []
+    RESET_CANDIDATE_BIO: (state) => {
+      state.candidateBio = []
     },
     APP_ERROR: (state, message) => {
       state.appError = message
@@ -125,28 +132,28 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    SEARCH_ALBUMS: async ({ commit, dispatch }, payload) => {
+    SEARCH_CANDIDATES: async ({ commit, dispatch }, payload) => {
       try {
         // show loading animation
-        commit('IS_ALBUM_LOADING', true)
+        commit('IS_CANDIDATES_LOADING', true)
         const { data } = await axios.get(`${payload.url}`)
         if (data.results.length === 0) {
           // if search response data results is empty commit search failed and clear the search input
           commit('CLEAR_SEARCH')
           commit('SEARCH_FAILED', true)
-          commit('IS_ALBUM_LOADING', false)
+          commit('IS_CANDIDATES_LOADING', false)
         } else {
           // assign the search data results to set album state and query to set search query state
-          commit('IS_ALBUM_LOADING', false)
+          commit('IS_CANDIDATES_LOADING', false)
           commit('SEARCH_FAILED', false)
-          commit('SET_ALBUM', data.results)
+          commit('SET_CANDIDATES', data.results)
           commit('SET_SEARCH_QUERY', payload.query)
           dispatch('SAVE_TO_RECENT_SEARCH', payload.query)
         }
       } catch (err) {
         // if error commit search failed and clear the search input
         commit('CLEAR_SEARCH')
-        commit('IS_ALBUM_LOADING', false)
+        commit('IS_CANDIDATES_LOADING', false)
         commit('APP_ERROR', err.message)
       }
     },
@@ -205,53 +212,53 @@ export default new Vuex.Store({
         commit('APP_ERROR', err.message)
       }
     },
-    BOOKMARK_ALBUM: ({ commit }, payload) => {
+    BOOKMARK_CANDIDATE: ({ commit }, payload) => {
       try {
         // destructure and assign payload album objects to the new variables
         const { artistName, collectionCensoredName, artworkUrl100, primaryGenreName, collectionViewUrl, collectionId } = payload.album
         // assign the new payload album variables as object items to newBookmarkItem variable
         const newBookmarkItem = { artistName, collectionCensoredName, artworkUrl100, primaryGenreName, collectionViewUrl, collectionId }
-        let bookmarkAlbums = []
+        let bookmarkCandidates = []
         // check payload status
         if (payload.status === 'unbookmarked') {
           // if status is unbookmarked assign bookmark_albums localstorage to boolmarkAlbums
-          bookmarkAlbums = JSON.parse(localStorage.getItem('bookmark_albums'))
-          // check if the bookmarkAlbums item is already in the array
-          const oldBookmarkAlbums = bookmarkAlbums.map((e) => { return e.collectionCensoredName }).indexOf(collectionCensoredName)
-          // if is in the array remove payload item to bookmarkAlbums
-          if (oldBookmarkAlbums !== -1) bookmarkAlbums.splice(oldBookmarkAlbums, 1)
-          // set the new bookmarkAlbums array to the localstorage
-          localStorage.setItem('bookmark_albums', JSON.stringify(bookmarkAlbums))
+          bookmarkCandidates = JSON.parse(localStorage.getItem('bookmark_albums'))
+          // check if the bookmarkCandidates item is already in the array
+          const oldBookmarkAlbums = bookmarkCandidates.map((e) => { return e.collectionCensoredName }).indexOf(collectionCensoredName)
+          // if is in the array remove payload item to bookmarkCandidates
+          if (oldBookmarkAlbums !== -1) bookmarkCandidates.splice(oldBookmarkAlbums, 1)
+          // set the new bookmarkCandidates array to the localstorage
+          localStorage.setItem('bookmark_albums', JSON.stringify(bookmarkCandidates))
         } else {
           // if status is bookmark
           // check if bookmark storage is null
           if (localStorage.getItem('bookmark_albums') === null) {
-            // push the newBookmarkItem to bookmarkAlbums
-            bookmarkAlbums.push(newBookmarkItem)
-            // set the new bookmarkAlbums array to the localstorage
-            localStorage.setItem('bookmark_albums', JSON.stringify(bookmarkAlbums))
+            // push the newBookmarkItem to bookmarkCandidates
+            bookmarkCandidates.push(newBookmarkItem)
+            // set the new bookmarkCandidates array to the localstorage
+            localStorage.setItem('bookmark_albums', JSON.stringify(bookmarkCandidates))
           } else {
             // if bookmark storage have datas
-            // assign bookmark_album localstorage data to bookmarkAlbums
-            bookmarkAlbums = JSON.parse(localStorage.getItem('bookmark_albums'))
-            // push the newBookmarkItem to bookmarkAlbums
-            bookmarkAlbums.push(newBookmarkItem)
-            // push the newBookmarkItem to bookmarkAlbums
-            localStorage.setItem('bookmark_albums', JSON.stringify(bookmarkAlbums))
+            // assign bookmark_album localstorage data to bookmarkCandidates
+            bookmarkCandidates = JSON.parse(localStorage.getItem('bookmark_albums'))
+            // push the newBookmarkItem to bookmarkCandidates
+            bookmarkCandidates.push(newBookmarkItem)
+            // push the newBookmarkItem to bookmarkCandidates
+            localStorage.setItem('bookmark_albums', JSON.stringify(bookmarkCandidates))
           }
         }
-        commit('SET_BOOKMARK_ALBUMS', bookmarkAlbums)
+        commit('SET_BOOKMARK_CANDIDATES', bookmarkCandidates)
       } catch (err) {
         commit('APP_ERROR', err.message)
       }
     },
-    GET_BOOKMARK_ALBUMS: ({ commit }) => {
+    GET_BOOKMARK_CANDIDATES: ({ commit }) => {
       try {
-        // assign bookmark_albums localstorage to bookmarkAlbums variable
-        const bookmarkAlbums = localStorage.getItem('bookmark_albums')
-        if (bookmarkAlbums !== null) {
-          // if not null assign the new bookmark albums array to the bookmark albums state
-          commit('SET_BOOKMARK_ALBUMS', JSON.parse(bookmarkAlbums))
+        // assign bookmark_albums localstorage to bookmarkCandidates variable
+        const bookmarkCandidates = localStorage.getItem('bookmark_albums')
+        if (bookmarkCandidates !== null) {
+          // if not null assign the new bookmark candidates array to the bookmark candidates state
+          commit('SET_BOOKMARK_CANDIDATES', JSON.parse(bookmarkCandidates))
         }
       } catch (err) {
         commit('APP_ERROR', err.message)
@@ -288,24 +295,24 @@ export default new Vuex.Store({
         commit('APP_ERROR', err.message)
       }
     },
-    GET_ALBUM_TRACKS: async ({ commit, state }, payload) => {
+    GET_CANDIDATE_BIO: async ({ commit, state }, payload) => {
       try {
         // show loading animation
-        commit('IS_ALBUM_TRACKS_LOADING', true)
+        commit('IS_CANDIDATE_BIO_LOADING', true)
         // reset album tracks
-        if (state.albumTracks.length > 0) {
-          commit('RESET_ALBUM_TRACKS')
+        if (state.candidateBio.length > 0) {
+          commit('RESET_CANDIDATE_BIO')
         }
         const { data } = await axios.get(`${payload.url}`)
         if (data.results.length === 0) {
-          commit('SET_ALBUM_TRACKS_FAILED', true)
-          commit('IS_ALBUM_TRACKS_LOADING', false)
+          commit('SET_CANDIDATE_BIO_FAILED', true)
+          commit('IS_CANDIDATE_BIO_LOADING', false)
         } else {
-          commit('SET_ALBUM_TRACKS', data.results)
-          commit('IS_ALBUM_TRACKS_LOADING', false)
+          commit('SET_CANDIDATE_BIO', data.results)
+          commit('IS_CANDIDATE_BIO_LOADING', false)
         }
       } catch (err) {
-        commit('IS_ALBUM_TRACKS_LOADING', false)
+        commit('IS_CANDIDATE_BIO_LOADING', false)
         commit('APP_ERROR', err.message)
       }
     }

@@ -16,7 +16,7 @@
               <span class="badge" v-if="recentSearch.length > 0">{{recentSearch.length}}</span>
             </div>
             <span class="icon is-large nav-icon">
-              <b-tooltip v-if="pageType === 'bookmarks' || isMobile || bookmarkAlbums.length === 0" type="is-light" :label="`${bookmarkAlbums.length} album bookmarks`" position="is-bottom" :active="!isMobile" >
+              <b-tooltip v-if="pageType === 'bookmarks' || isMobile || bookmarkCandidates.length === 0" type="is-light" :label="`${bookmarkCandidates.length} album bookmarks`" position="is-bottom" :active="!isMobile" >
                 <i @click="onClickShowBookmarks" class="fas fa-2x" :class="[{'icon-active': pageType === 'bookmarks'}, settings.bookmarkIcon]"></i>
               </b-tooltip>
               <!-- Dropdown -->
@@ -40,9 +40,9 @@
                       </div>
                     </article>
                   </b-dropdown-item>
-                  <b-dropdown-item class="has-text-centered" v-if="bookmarkAlbums.length > 5" @click="onClickShowBookmarks">View All </b-dropdown-item>
+                  <b-dropdown-item class="has-text-centered" v-if="bookmarkCandidates.length > 5" @click="onClickShowBookmarks">View All </b-dropdown-item>
               </b-dropdown>
-              <span class="badge" v-if="bookmarkAlbums.length > 0">{{bookmarkAlbums.length}}</span>
+              <span class="badge" v-if="bookmarkCandidates.length > 0">{{bookmarkCandidates.length}}</span>
             </span>
             <span class="icon is-large nav-icon">
               <b-tooltip type="is-light" label="Settings" position="is-bottom" :active="!isMobile">
@@ -72,7 +72,7 @@ export default {
       type: String,
       required: true
     },
-    bookmarkAlbums: {
+    bookmarkCandidates: {
       type: Array,
       required: true
     },
@@ -87,7 +87,7 @@ export default {
   },
   computed: {
     latestBookmarkAlbums () {
-      return this.bookmarkAlbums.slice(0, 5)
+      return this.bookmarkCandidates.slice(0, 5)
     }
   },
   methods: {

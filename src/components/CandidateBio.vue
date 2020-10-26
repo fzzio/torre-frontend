@@ -82,7 +82,7 @@
 export default {
   name: 'TrackList',
   props: {
-    albumTracks: {
+    candidateBio: {
       type: Array,
       required: true
     },
@@ -113,11 +113,11 @@ export default {
   },
   methods: {
     showAlbumTrackList () {
-      this.albumTracks.shift()
-      this.albumTrackList = this.albumTracks
+      this.candidateBio.shift()
+      this.albumTrackList = this.candidateBio
     },
     showAlbumInfo () {
-      this.albumInfo = this.albumTracks[0]
+      this.albumInfo = this.candidateBio[0]
     },
     onSort (field, order) {
       this.sortField = field

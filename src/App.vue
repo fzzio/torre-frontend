@@ -10,13 +10,13 @@
         @clickAlbumName='getAlbumTracks'
         :pageType="pageType"
         :recentSearch="recentSearch"
-        :bookmarkAlbums="bookmarkAlbums"
+        :bookmarkCandidates="bookmarkCandidates"
         :settings="settings"
         :isMobile="isMobile"
         :showRecentSearchBox="showRecentSearchBox">
       </the-navbar>
       <the-searchbar
-        @clickSearch="searchAlbums"
+        @clickSearch="searchCandidates"
         @clickClearSearch="clearSearch"
         :recentSearch="recentSearch"
         :newSearchQuery="searchQuery"
@@ -29,25 +29,25 @@
         <recent-search-box
           v-if="showRecentSearchBox && recentSearch.length > 0"
           :recentSearch="recentSearch"
-          @clickSearchItem="searchAlbums"
+          @clickSearchItem="searchCandidates"
           @clickRemoveRecentSearchItem="removeRecentSearchItem">
         </recent-search-box>
       </transition>
-      <album-list
+      <candidate-list
         @clickUpdateSettings="updateSettings"
         @clickAlbumName='getAlbumTracks'
-        :clickBookmarkAlbum="bookmarkAlbum"
+        :clickBookmarkAlbum="bookmarkCandidate"
         :replaceArtworkUrlSize="replaceArtworkUrlSize"
         :isInBookmark="isInBookmark"
-        :albums="pageType === 'search' ? albums: bookmarkAlbums"
+        :candidates="pageType === 'search' ? candidates: bookmarkCandidates"
         :pageType="pageType"
-        :isAlbumLoading="isAlbumLoading"
+        :isCandidatesLoading="isCandidatesLoading"
         :searchFailed="searchFailed"
-        :bookmarkAlbums="bookmarkAlbums"
+        :bookmarkCandidates="bookmarkCandidates"
         :settings="settings"
         :isMobile="isMobile"
         >
-      </album-list>
+      </candidate-list>
       <!-- settings modal -->
       <b-modal
         :active.sync="isSettingsModalActive"
@@ -57,21 +57,21 @@
           @clickUpdateSettings="updateSettings">
         </the-settings>
       </b-modal>
-      <!-- album tracklist modal -->
+      <!-- CandidateBio modal -->
       <b-modal
-        :active.sync="isAlbumTracksModalActive"
+        :active.sync="isCandidateBioModalActive"
         :canCancel=true has-modal-card
-        :onCancel="resetAlbumTracks"
+        :onCancel="resetCandidateBio"
         scroll="clip"
         >
-        <div class="columns is-mobile is-centered" v-if="!albumTracksFailed && albumTracks.length === 0" >
+        <div class="columns is-mobile is-centered" v-if="!candidateBioFailed && candidateBio.length === 0" >
           <div class="columns is-mobile"  >
             <div class="column loading">
-                <b-loading :is-full-page="false" :active.sync="isAlbumTracksLoading" :can-cancel="false"></b-loading>
+                <b-loading :is-full-page="false" :active.sync="isCandidateBioLoading" :can-cancel="false"></b-loading>
             </div>
           </div>
         </div>
-        <div class="container" v-else-if="albumTracksFailed">
+        <div class="container" v-else-if="candidateBioFailed">
           <div class="columns is-mobile is-centered"  >
             <div class="column is-4">
               <b-message  type="is-danger" has-icon >
@@ -81,18 +81,18 @@
             </div>
           </div>
         </div>
-        <album-track-list  v-else
-          :albumTracks="albumTracks"
-          :clickBookmarkAlbum="bookmarkAlbum"
+        <candidate-bio  v-else
+          :candidateBio="candidateBio"
+          :clickBookmarkAlbum="bookmarkCandidate"
           :isInBookmark="isInBookmark"
           :replaceArtworkUrlSize="replaceArtworkUrlSize"
           :settings="settings"
           :isMobile="isMobile"
           >
-        </album-track-list>
+        </candidate-bio>
       </b-modal>
     </main>
-    <the-footer :class="{'footer-fixed': pageType === 'search' && albums.length === 0 || pageType === 'bookmarks' && bookmarkAlbums.length === 0 || isAlbumLoading }"></the-footer>
+    <the-footer :class="{'footer-fixed': pageType === 'search' && candidates.length === 0 || pageType === 'bookmarks' && bookmarkCandidates.length === 0 || isCandidatesLoading }"></the-footer>
   </div>
 </template>
 
@@ -100,9 +100,9 @@
 import TheNavbar from './components/TheNavbar'
 import TheSearchbar from './components/TheSearchbar'
 import RecentSearchBox from './components/RecentSearchBox'
-import AlbumList from './components/AlbumList'
+import CandidateList from './components/CandidateList'
 import TheSettings from './components/TheSettings'
-import AlbumTrackList from './components/AlbumTrackList'
+import CandidateBio from './components/CandidateBio'
 import TheFooter from './components/TheFooter'
 import { mapGetters } from 'vuex'
 export default {
@@ -110,7 +110,7 @@ export default {
   data () {
     return {
       isSettingsModalActive: false,
-      isAlbumTracksModalActive: false,
+      isCandidateBioModalActive: false,
       windowWidth: window.innerWidth,
       showNavbar: true
     }
@@ -120,24 +120,24 @@ export default {
     TheSearchbar,
     RecentSearchBox,
     TheSettings,
-    AlbumList,
-    AlbumTrackList,
+    CandidateList,
+    CandidateBio,
     TheFooter
   },
   computed: {
     ...mapGetters({
       recentSearch: 'GET_RECENT_SEARCH',
-      albums: 'GET_ALBUMS',
-      albumTracks: 'GET_ALBUM_TRACKS',
+      candidates: 'GET_CANDIDATES',
+      candidateBio: 'GET_CANDIDATE_BIO',
       searchQuery: 'SEARCH_QUERY',
       initialSearchQuery: 'INITIAL_SEARCH_QUERY',
-      bookmarkAlbums: 'BOOKMARK_ALBUMS',
+      bookmarkCandidates: 'BOOKMARK_CANDIDATES',
       pageType: 'PAGE_TYPE',
       showRecentSearchBox: 'SHOW_RECENT_SEARCH_BOX',
-      isAlbumLoading: 'IS_ALBUM_LOADING',
-      isAlbumTracksLoading: 'IS_ALBUM_TRACKS_LOADING',
+      isCandidatesLoading: 'IS_CANDIDATES_LOADING',
+      isCandidateBioLoading: 'IS_CANDIDATE_BIO_LOADING',
       searchFailed: 'SEARCH_FAILED',
-      albumTracksFailed: 'ALBUM_TRACKS_FAILED',
+      candidateBioFailed: 'CANDIDATE_BIO_FAILED',
       settings: 'GET_SETTINGS',
       isAppError: 'IS_APP_ERROR'
     }),
@@ -151,17 +151,17 @@ export default {
   created () {
     this.$store.dispatch('GET_SETTINGS')
     this.$store.dispatch('GET_RECENT_SEARCH')
-    this.$store.dispatch('GET_BOOKMARK_ALBUMS')
+    this.$store.dispatch('GET_BOOKMARK_CANDIDATES')
     window.addEventListener('scroll', this.toggleNavbar)
   },
   destroyed () {
     window.removeEventListener('scroll', this.toggleNavbar)
   },
   methods: {
-    searchAlbums (query) {
+    searchCandidates (query) {
       if (query) {
         const payload = { 'url': `/api/search?term=${query}&entity=album&media=music`, 'query': query }
-        this.$store.dispatch('SEARCH_ALBUMS', payload)
+        this.$store.dispatch('SEARCH_CANDIDATES', payload)
       }
       this.$store.commit('SET_PAGE_TYPE', 'search')
     },
@@ -174,14 +174,14 @@ export default {
     removeRecentSearchItem (item) {
       this.$store.dispatch('REMOVE_RECENT_SEARCH_ITEM', item)
     },
-    bookmarkAlbum (album) {
+    bookmarkCandidate (album) {
       if (this.isInBookmark(album.collectionCensoredName)) {
         this.$dialog.confirm({
           message: `Are you sure you want to unbookmark this album? <b>${album.collectionCensoredName} album</b>`,
           type: 'is-danger',
           hasIcon: true,
           onConfirm: () => {
-            this.$store.dispatch('BOOKMARK_ALBUM', { 'album': album, 'status': 'unbookmarked' })
+            this.$store.dispatch('BOOKMARK_CANDIDATE', { 'album': album, 'status': 'unbookmarked' })
             this.$toast.open({
               duration: 3000,
               message: `"${album.collectionCensoredName} album" has been unbookmark!`,
@@ -197,11 +197,11 @@ export default {
           position: 'is-bottom',
           type: 'is-info'
         })
-        this.$store.dispatch('BOOKMARK_ALBUM', { 'album': album, 'status': 'bookmark' })
+        this.$store.dispatch('BOOKMARK_CANDIDATE', { 'album': album, 'status': 'bookmark' })
       }
     },
     isInBookmark (albumName) {
-      return this.bookmarkAlbums.findIndex(album => album.collectionCensoredName === albumName) > -1
+      return this.bookmarkCandidates.findIndex(album => album.collectionCensoredName === albumName) > -1
     },
     showBookmarks () {
       this.$store.commit('SET_PAGE_TYPE', 'bookmarks')
@@ -215,9 +215,9 @@ export default {
     },
     getAlbumTracks (albumId) {
       if (albumId) {
-        this.isAlbumTracksModalActive = true
+        this.isCandidateBioModalActive = true
         const payload = { 'url': `/api/lookup?id=${albumId}&entity=song` }
-        this.$store.dispatch('GET_ALBUM_TRACKS', payload)
+        this.$store.dispatch('GET_CANDIDATE_BIO', payload)
       }
     },
     setPageType (pageType) {
@@ -226,11 +226,11 @@ export default {
       }
 
       if (pageType === 'search' && this.initialSearchQuery !== this.searchQuery) {
-        this.searchAlbums(this.initialSearchQuery)
+        this.searchCandidates(this.initialSearchQuery)
       }
     },
-    resetAlbumTracks () {
-      this.$store.commit('RESET_ALBUM_TRACKS')
+    resetCandidateBio () {
+      this.$store.commit('RESET_CANDIDATE_BIO')
     },
     replaceArtworkUrlSize (albumArtwork, newSize) {
       return albumArtwork.replace('100x100', newSize)

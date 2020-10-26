@@ -1,20 +1,20 @@
 <template>
     <section class="section">
       <div class="container" style="margin-top:0px;">
-        <div class="columns is-multiline is-mobile" v-if="!isAlbumLoading && albums.length > 0">
+        <div class="columns is-multiline is-mobile" v-if="!isCandidatesLoading && candidates.length > 0">
           <div class="column is-6" >
             <span class="is-size-5-desktop is-size-6-mobile has-text-grey" v-if="pageType !== 'bookmarks'"> Search Results </span>
             <span class="is-size-5-desktop is-size-6-mobile has-text-grey" v-else> Bookmarks</span></div>
-          <div class="column is-5 has-text-right "><span class="has-text-grey-light is-size-6"> {{albums.length}} album(s) </span> </div>
+          <div class="column is-5 has-text-right "><span class="has-text-grey-light is-size-6"> {{candidates.length}} album(s) </span> </div>
           <div class="column is-1 has-text-left">
               <b-tooltip type="is-light" label="switch panel view" position="is-top" :active="!isMobile">
               <i @click="onClickUpdateSettings" class="fas  fa-lg" :class="[settings.panelType === 'card' ? 'fa-th-list' : 'fa-th']"></i>
             </b-tooltip>
           </div>
         </div>
-        <!-- Album List -->
+        <!-- Candidate List -->
         <transition name="list" mode="out-in" >
-          <div class="columns is-multiline is-mobile" v-if="!isAlbumLoading && displayedAlbums.length > 0" :key="pageType">
+          <div class="columns is-multiline is-mobile" v-if="!isCandidatesLoading && displayedAlbums.length > 0" :key="pageType">
               <div  class="column"
                 :class="[settings.panelType === 'card' ? 'is-3-widescreen is-3-desktop is-4-tablet' : 'is-4-widescreen  is-4-desktop is-6-tablet is-12-mobile']"
                 v-for="album in displayedAlbums"
@@ -95,17 +95,17 @@
             </div>
           </transition>
           <!-- Loading animation -->
-          <div class="columns is-mobile" v-if="isAlbumLoading">
+          <div class="columns is-mobile" v-if="isCandidatesLoading">
             <div class="column loading">
-                <b-loading :is-full-page="false" :active.sync="isAlbumLoading" :can-cancel="false"></b-loading>
+                <b-loading :is-full-page="false" :active.sync="isCandidatesLoading" :can-cancel="false"></b-loading>
             </div>
           </div>
           <!-- Pagination -->
-          <div class="columns is-multiline is-mobile" v-if="!isAlbumLoading && albums.length > 0">
-            <div class="column is-12" v-if="albums.length > 0">
+          <div class="columns is-multiline is-mobile" v-if="!isCandidatesLoading && candidates.length > 0">
+            <div class="column is-12" v-if="candidates.length > 0">
               <hr>
               <b-pagination
-                  :total="albums.length"
+                  :total="candidates.length"
                   :current.sync="current"
                   :order="order"
                   :size="size"
@@ -116,7 +116,7 @@
             </div>
           </div>
           <!-- No Bookmark message-->
-          <template v-if="pageType === 'bookmarks' && albums.length === 0">
+          <template v-if="pageType === 'bookmarks' && candidates.length === 0">
             <div class="columns is-multiline is-mobile">
               <div class="column">
                 <h3 class="title is-4 has-text-centered">You have no saved bookmarks.</h3>
@@ -124,7 +124,7 @@
             </div>
           </template>
           <!-- Search results message -->
-          <template v-if="searchFailed && !isAlbumLoading">
+          <template v-if="searchFailed && !isCandidatesLoading">
           <div class="columns is-multiline is-mobile">
             <div class="column">
               <h3 class="title is-4 has-text-centered">Nothing found. </h3>
@@ -138,7 +138,7 @@
 
 <script>
 export default {
-  name: 'AlbumList',
+  name: 'CandidateList',
   data () {
     return {
       current: 1,
@@ -149,7 +149,7 @@ export default {
     }
   },
   props: {
-    albums: {
+    candidates: {
       type: Array,
       required: true
     },
@@ -157,7 +157,7 @@ export default {
       type: String,
       required: true
     },
-    isAlbumLoading: {
+    isCandidatesLoading: {
       type: Boolean,
       required: true
     },
@@ -165,7 +165,7 @@ export default {
       type: Boolean,
       required: true
     },
-    bookmarkAlbums: {
+    bookmarkCandidates: {
       type: Array,
       required: true
     },
@@ -192,23 +192,23 @@ export default {
   },
   computed: {
     displayedAlbums () {
-      return this.paginate(this.albums)
+      return this.paginate(this.candidates)
     }
   },
   watch: {
-    albums (val, oldVal) {
+    candidates (val, oldVal) {
       if (val !== oldVal) {
         this.current = 1
       }
     }
   },
   methods: {
-    paginate (albums) {
+    paginate (candidates) {
       let current = this.current
       let perPage = this.settings.perPage
       let from = (current * perPage) - perPage
       let to = (current * perPage)
-      return albums.slice(from, to)
+      return candidates.slice(from, to)
     },
     onClickUpdateSettings () {
       const settingValue = this.settings.panelType === 'card' ? 'media' : 'card'
