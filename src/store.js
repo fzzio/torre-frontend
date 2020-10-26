@@ -221,30 +221,30 @@ export default new Vuex.Store({
         let bookmarkCandidates = []
         // check payload status
         if (payload.status === 'unbookmarked') {
-          // if status is unbookmarked assign bookmark_albums localstorage to boolmarkAlbums
-          bookmarkCandidates = JSON.parse(localStorage.getItem('bookmark_albums'))
+          // if status is unbookmarked assign bookmark_candidates localstorage to bookmarkCandidates
+          bookmarkCandidates = JSON.parse(localStorage.getItem('bookmark_candidates'))
           // check if the bookmarkCandidates item is already in the array
-          const oldBookmarkAlbums = bookmarkCandidates.map((e) => { return e.collectionCensoredName }).indexOf(collectionCensoredName)
+          const oldBookmarkCandidates = bookmarkCandidates.map((e) => { return e.collectionCensoredName }).indexOf(collectionCensoredName)
           // if is in the array remove payload item to bookmarkCandidates
-          if (oldBookmarkAlbums !== -1) bookmarkCandidates.splice(oldBookmarkAlbums, 1)
+          if (oldBookmarkCandidates !== -1) bookmarkCandidates.splice(oldBookmarkCandidates, 1)
           // set the new bookmarkCandidates array to the localstorage
-          localStorage.setItem('bookmark_albums', JSON.stringify(bookmarkCandidates))
+          localStorage.setItem('bookmark_candidates', JSON.stringify(bookmarkCandidates))
         } else {
           // if status is bookmark
           // check if bookmark storage is null
-          if (localStorage.getItem('bookmark_albums') === null) {
+          if (localStorage.getItem('bookmark_candidates') === null) {
             // push the newBookmarkItem to bookmarkCandidates
             bookmarkCandidates.push(newBookmarkItem)
             // set the new bookmarkCandidates array to the localstorage
-            localStorage.setItem('bookmark_albums', JSON.stringify(bookmarkCandidates))
+            localStorage.setItem('bookmark_candidates', JSON.stringify(bookmarkCandidates))
           } else {
             // if bookmark storage have datas
             // assign bookmark_album localstorage data to bookmarkCandidates
-            bookmarkCandidates = JSON.parse(localStorage.getItem('bookmark_albums'))
+            bookmarkCandidates = JSON.parse(localStorage.getItem('bookmark_candidates'))
             // push the newBookmarkItem to bookmarkCandidates
             bookmarkCandidates.push(newBookmarkItem)
             // push the newBookmarkItem to bookmarkCandidates
-            localStorage.setItem('bookmark_albums', JSON.stringify(bookmarkCandidates))
+            localStorage.setItem('bookmark_candidates', JSON.stringify(bookmarkCandidates))
           }
         }
         commit('SET_BOOKMARK_CANDIDATES', bookmarkCandidates)
@@ -254,8 +254,8 @@ export default new Vuex.Store({
     },
     GET_BOOKMARK_CANDIDATES: ({ commit }) => {
       try {
-        // assign bookmark_albums localstorage to bookmarkCandidates variable
-        const bookmarkCandidates = localStorage.getItem('bookmark_albums')
+        // assign bookmark_candidates localstorage to bookmarkCandidates variable
+        const bookmarkCandidates = localStorage.getItem('bookmark_candidates')
         if (bookmarkCandidates !== null) {
           // if not null assign the new bookmark candidates array to the bookmark candidates state
           commit('SET_BOOKMARK_CANDIDATES', JSON.parse(bookmarkCandidates))

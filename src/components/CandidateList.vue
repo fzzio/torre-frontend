@@ -14,10 +14,10 @@
         </div>
         <!-- Candidate List -->
         <transition name="list" mode="out-in" >
-          <div class="columns is-multiline is-mobile" v-if="!isCandidatesLoading && displayedAlbums.length > 0" :key="pageType">
+          <div class="columns is-multiline is-mobile" v-if="!isCandidatesLoading && displayedCandidates.length > 0" :key="pageType">
               <div  class="column"
                 :class="[settings.panelType === 'card' ? 'is-3-widescreen is-3-desktop is-4-tablet' : 'is-4-widescreen  is-4-desktop is-6-tablet is-12-mobile']"
-                v-for="album in displayedAlbums"
+                v-for="album in displayedCandidates"
                 :key="album.collectionId">
                 <!-- Card Panel  -->
                 <div class="card"
@@ -32,7 +32,7 @@
                   <div class="card-content">
                     <div class="media">
                       <div class="media-content overflow-content">
-                        <div class="title is-size-6-widescreen is-size-6-desktop album-name" ><a v-if="album.collectionId" @click="onClickAlbumName(album.collectionId)">{{album.collectionCensoredName}}</a></div>
+                        <div class="title is-size-6-widescreen is-size-6-desktop candidate-name" ><a v-if="album.collectionId" @click="onClickCandidateName(album.collectionId)">{{album.collectionCensoredName}}</a></div>
                         <div class="subtitle is-6">{{album.artistName}} <br>
                         <span class="has-text-grey-light">{{album.primaryGenreName}}</span></div>
                       </div>
@@ -46,7 +46,7 @@
                       </a>
                       <span class="heart card-footer-item">
                         <b-tooltip type="is-light" :label="isInBookmark(album.collectionCensoredName) ? 'click to unbookmarked' : 'click to bookmark'" position="is-top" :active="!isMobile">
-                          <i @click="clickBookmarkAlbum(album)" class="fas fa-lg bookmarkIcon" :class="[{'favorite': isInBookmark(album.collectionCensoredName)}, settings.bookmarkIcon]"></i>
+                          <i @click="clickBookmarkCandidate(album)" class="fas fa-lg bookmarkIcon" :class="[{'favorite': isInBookmark(album.collectionCensoredName)}, settings.bookmarkIcon]"></i>
                         </b-tooltip>
                       </span>
                       <a v-if="settings.youtubeLink === 'true'" :href="`https://www.youtube.com/results?search_query=${album.artistName} - ${album.collectionCensoredName}`" target="_blank" class="card-footer-item">
@@ -66,7 +66,7 @@
                   <div class="media-content">
                     <div class="content overflow-content">
                       <div>
-                        <strong><a v-if="album.collectionId" @click="onClickAlbumName(album.collectionId)">{{album.collectionCensoredName}}</a></strong> <br>
+                        <strong><a v-if="album.collectionId" @click="onClickCandidateName(album.collectionId)">{{album.collectionCensoredName}}</a></strong> <br>
                         {{album.artistName}} ( <span class="has-text-grey-light">{{album.primaryGenreName}}</span> )
                       </div>
                     </div>
@@ -79,7 +79,7 @@
                         </a>
                         <a class="level-item">
                           <b-tooltip type="is-light" :label="isInBookmark(album.collectionCensoredName) ? 'click to unbookmarked' : 'click to bookmark'" position="is-top" :active="!isMobile">
-                            <i @click="clickBookmarkAlbum(album)" class="fas bookmarkIcon" :class="[{'favorite': isInBookmark(album.collectionCensoredName)}, settings.bookmarkIcon]"></i>
+                            <i @click="clickBookmarkCandidate(album)" class="fas bookmarkIcon" :class="[{'favorite': isInBookmark(album.collectionCensoredName)}, settings.bookmarkIcon]"></i>
                           </b-tooltip>
                         </a>
                         <a v-if="settings.youtubeLink === 'true'" class="level-item" :href="`https://www.youtube.com/results?search_query=${album.artistName} - ${album.collectionCensoredName}`" target="_blank">
@@ -177,7 +177,7 @@ export default {
       type: Boolean,
       required: true
     },
-    clickBookmarkAlbum: {
+    clickBookmarkCandidate: {
       type: Function,
       required: true
     },
@@ -191,7 +191,7 @@ export default {
     }
   },
   computed: {
-    displayedAlbums () {
+    displayedCandidates () {
       return this.paginate(this.candidates)
     }
   },
@@ -214,8 +214,8 @@ export default {
       const settingValue = this.settings.panelType === 'card' ? 'media' : 'card'
       this.$emit('clickUpdateSettings', 'panelType', settingValue)
     },
-    onClickAlbumName (albumId) {
-      this.$emit('clickAlbumName', albumId)
+    onClickCandidateName (candidateId) {
+      this.$emit('clickCandidateName', candidateId)
     }
   }
 }

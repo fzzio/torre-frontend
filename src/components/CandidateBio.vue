@@ -1,37 +1,37 @@
 <template>
 <div  class="modal-card" style="width: auto; max-width: 980px; height: auto; max-height: 700px"  >
     <header class="modal-card-head">
-      <p class="modal-card-title" v-if="albumInfo"><strong>{{albumInfo.collectionCensoredName}} album</strong></p>
+      <p class="modal-card-title" v-if="candidateInfo"><strong>{{candidateInfo.collectionCensoredName}} album</strong></p>
     </header>
   <section class="modal-card-body">
       <div class="columns is-multiline">
-        <div v-if="albumInfo" class="column is-12">
+        <div v-if="candidateInfo" class="column is-12">
           <article class="media media-modal">
             <figure class="media-left">
               <p class="image">
-                <img v-if="albumInfo.artworkUrl100" :src="replaceArtworkUrlSize(albumInfo.artworkUrl100, '130x130')">
+                <img v-if="candidateInfo.artworkUrl100" :src="replaceArtworkUrlSize(candidateInfo.artworkUrl100, '130x130')">
               </p>
             </figure>
             <div class="media-content">
-              <div class="content" v-if="albumInfo">
-                  {{ albumInfo.artistName}} <br>
-                  {{ albumInfo.primaryGenreName}} <br>
-                  {{albumInfo.trackCount}} Songs<br>
-                  <span class="has-text-grey-light" v-if="albumInfo.releaseDate">Release: {{albumInfo.releaseDate | moment("dddd, MMMM Do YYYY") }}</span>
+              <div class="content" v-if="candidateInfo">
+                  {{ candidateInfo.artistName}} <br>
+                  {{ candidateInfo.primaryGenreName}} <br>
+                  {{candidateInfo.trackCount}} Songs<br>
+                  <span class="has-text-grey-light" v-if="candidateInfo.releaseDate">Release: {{candidateInfo.releaseDate | moment("dddd, MMMM Do YYYY") }}</span>
               </div>
               <div class="level is-mobile">
                     <div class="level-left">
-                      <a  class="level-item" :href="albumInfo.collectionViewUrl" target="_blank">
+                      <a  class="level-item" :href="candidateInfo.collectionViewUrl" target="_blank">
                         <b-tooltip type="is-light" label="Download on iTunes" position="is-top" :active="!isMobile">
                           <i class="fab fa-itunes-note"></i>
                         </b-tooltip>
                       </a>
                       <a class="level-item">
-                        <b-tooltip type="is-light" :label="isInBookmark(albumInfo.collectionCensoredName) ? 'click to unbookmarked' : 'click to bookmark'" position="is-top" :active="!isMobile">
-                          <i @click="clickBookmarkAlbum(albumInfo)" class="fas bookmarkIcon" :class="[{'favorite': isInBookmark(albumInfo.collectionCensoredName)}, settings.bookmarkIcon]"></i>
+                        <b-tooltip type="is-light" :label="isInBookmark(candidateInfo.collectionCensoredName) ? 'click to unbookmarked' : 'click to bookmark'" position="is-top" :active="!isMobile">
+                          <i @click="clickBookmarkCandidate(candidateInfo)" class="fas bookmarkIcon" :class="[{'favorite': isInBookmark(candidateInfo.collectionCensoredName)}, settings.bookmarkIcon]"></i>
                         </b-tooltip>
                       </a>
-                      <a v-if="settings.youtubeLink === 'true'" class="level-item" :href="`https://www.youtube.com/results?search_query=${albumInfo.artistName} - ${albumInfo.collectionCensoredName}`" target="_blank">
+                      <a v-if="settings.youtubeLink === 'true'" class="level-item" :href="`https://www.youtube.com/results?search_query=${candidateInfo.artistName} - ${candidateInfo.collectionCensoredName}`" target="_blank">
                         <b-tooltip type="is-light" label="search on youtube" position="is-top" :active="!isMobile">
                           <i class="fab fa-youtube"></i>
                         </b-tooltip>
@@ -80,7 +80,7 @@
 
 <script>
 export default {
-  name: 'TrackList',
+  name: 'CandidateBio',
   props: {
     candidateBio: {
       type: Array,
@@ -98,7 +98,7 @@ export default {
       type: Boolean,
       required: true
     },
-    clickBookmarkAlbum: {
+    clickBookmarkCandidate: {
       type: Function,
       required: true
     },
@@ -117,7 +117,7 @@ export default {
       this.albumTrackList = this.candidateBio
     },
     showAlbumInfo () {
-      this.albumInfo = this.candidateBio[0]
+      this.candidateInfo = this.candidateBio[0]
     },
     onSort (field, order) {
       this.sortField = field
@@ -132,7 +132,7 @@ export default {
   },
   data () {
     return {
-      albumInfo: {},
+      candidateInfo: {},
       albumTrackList: []
     }
   }

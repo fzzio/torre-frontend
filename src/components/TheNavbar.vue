@@ -22,7 +22,7 @@
               <!-- Dropdown -->
               <b-dropdown v-else hoverable position="is-bottom-left">
                 <i slot="trigger" @click="onClickShowBookmarks" class="fas fa-2x" :class="[{'icon-active': pageType === 'bookmarks'}, settings.bookmarkIcon]"></i>
-                  <b-dropdown-item  v-for="(album, index) in latestBookmarkAlbums" :key="index" @click="onClickAlbumName(album.collectionId)" >
+                  <b-dropdown-item  v-for="(album, index) in latestBookmarkCandidates" :key="index" @click="onClickCandidateName(album.collectionId)" >
                     <article class="media">
                       <figure class="media-left">
                          <p class="image is-64x64 ">
@@ -86,7 +86,7 @@ export default {
     }
   },
   computed: {
-    latestBookmarkAlbums () {
+    latestBookmarkCandidates () {
       return this.bookmarkCandidates.slice(0, 5)
     }
   },
@@ -103,8 +103,8 @@ export default {
     onClickTitle () {
       this.$emit('clickTitle')
     },
-    onClickAlbumName (albumId) {
-      this.$emit('clickAlbumName', albumId)
+    onClickCandidateName (candidateId) {
+      this.$emit('clickCandidateName', candidateId)
     }
 
   }

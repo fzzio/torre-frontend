@@ -7,7 +7,7 @@
         @clickShowBookmarks="showBookmarks"
         @clickSettings="showSettingsModal"
         @clickTitle="setPageType('search')"
-        @clickAlbumName='getAlbumTracks'
+        @clickCandidateName='getCandidateBio'
         :pageType="pageType"
         :recentSearch="recentSearch"
         :bookmarkCandidates="bookmarkCandidates"
@@ -35,8 +35,8 @@
       </transition>
       <candidate-list
         @clickUpdateSettings="updateSettings"
-        @clickAlbumName='getAlbumTracks'
-        :clickBookmarkAlbum="bookmarkCandidate"
+        @clickCandidateName='getCandidateBio'
+        :clickBookmarkCandidate="bookmarkCandidate"
         :replaceArtworkUrlSize="replaceArtworkUrlSize"
         :isInBookmark="isInBookmark"
         :candidates="pageType === 'search' ? candidates: bookmarkCandidates"
@@ -83,7 +83,7 @@
         </div>
         <candidate-bio  v-else
           :candidateBio="candidateBio"
-          :clickBookmarkAlbum="bookmarkCandidate"
+          :clickBookmarkCandidate="bookmarkCandidate"
           :isInBookmark="isInBookmark"
           :replaceArtworkUrlSize="replaceArtworkUrlSize"
           :settings="settings"
@@ -213,10 +213,10 @@ export default {
     showSettingsModal () {
       this.isSettingsModalActive = true
     },
-    getAlbumTracks (albumId) {
-      if (albumId) {
+    getCandidateBio (candidateId) {
+      if (candidateId) {
         this.isCandidateBioModalActive = true
-        const payload = { 'url': `/api/lookup?id=${albumId}&entity=song` }
+        const payload = { 'url': `/api/lookup?id=${candidateId}&entity=song` }
         this.$store.dispatch('GET_CANDIDATE_BIO', payload)
       }
     },
