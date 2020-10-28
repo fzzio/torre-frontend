@@ -14,8 +14,9 @@
             </figure>
             <div class="media-content">
               <div class="content" v-if="basicBio">
-                  {{basicBio.professionalHeadline}} <br>
-                  <span class="has-text-grey-light" v-if="basicBio.location">{{basicBio.location}}</span>
+                  <strong>{{basicBio.professionalHeadline}}</strong><br>
+                  {{basicBio.location}} <br>
+                  Interests: <span class="has-text-grey-light" v-if="interests">{{interests}}</span>
               </div>
               <div class="level is-mobile">
                 <div class="level-left">
@@ -43,6 +44,26 @@
               </b-table-column>
             </template>
           </b-table>
+        </div>
+        <div class="column is-12"  >
+          <b-table :data="jobsList"  >
+            <template slot-scope="props">
+              <b-table-column field="job_title" label="Organizations" centered>
+                  {{ props.row.organizations }}
+              </b-table-column>
+              <b-table-column field="job_number" label="Name" centered>
+                {{ props.row.name }}
+              </b-table-column>
+              <b-table-column field="job_duration" label="Duration" centered>
+                {{ props.row.duration }}
+              </b-table-column>
+            </template>
+          </b-table>
+        </div>
+        <div v-if="strengths" class="column is-12">
+          <p class="has-text-grey-light">
+            {{strengths}}
+          </p>
         </div>
       </div>
     </section>
