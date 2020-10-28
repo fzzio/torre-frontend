@@ -158,7 +158,7 @@ export default {
   methods: {
     searchCandidates (query) {
       if (query) {
-        const payload = { 'url': `/api/candidate/search`, 'query': query }
+        const payload = { 'url': `https://floating-everglades-26974.herokuapp.com/candidate/search`, 'query': query }
         this.$store.dispatch('SEARCH_CANDIDATES', payload)
       }
       this.$store.commit('SET_PAGE_TYPE', 'search')
@@ -214,7 +214,7 @@ export default {
     getBioDetails (username) {
       if (username) {
         this.isBioDetailsModalActive = true
-        const payload = { 'url': `/api/candidate/extended/${username}` }
+        const payload = { 'url': `https://floating-everglades-26974.herokuapp.com/candidate/extended/${username}` }
         this.$store.dispatch('GET_BIO_DETAILS', payload)
       }
     },
