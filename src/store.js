@@ -305,7 +305,7 @@ export default new Vuex.Store({
       try {
         // show loading animation
         commit('IS_BIO_DETAILS_LOADING', true)
-        // reset album tracks
+        // reset bioDetails tracks
         if (state.bioDetails.length > 0) {
           commit('RESET_BIO_DETAILS')
         }

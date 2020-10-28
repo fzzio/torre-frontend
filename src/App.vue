@@ -57,7 +57,7 @@
           @clickUpdateSettings="updateSettings">
         </the-settings>
       </b-modal>
-      <!-- album tracklist modal -->
+      <!-- Bio detail modal -->
       <b-modal
         :active.sync="isBioDetailsModalActive"
         :canCancel=true has-modal-card
@@ -75,7 +75,7 @@
           <div class="columns is-mobile is-centered"  >
             <div class="column is-4">
               <b-message  type="is-danger" has-icon >
-                Error loading album track list. <br>
+                Error loading bio detail. <br>
                 Please check again later.
               </b-message>
             </div>

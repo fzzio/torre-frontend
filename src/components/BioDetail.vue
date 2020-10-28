@@ -1,77 +1,51 @@
 <template>
 <div  class="modal-card" style="width: auto; max-width: 980px; height: auto; max-height: 700px"  >
     <header class="modal-card-head">
-      <p class="modal-card-title" v-if="candidateInfo"><strong>{{candidateInfo.username}} candidate</strong></p>
+      <p class="modal-card-title" v-if="basicBio"><strong>{{basicBio.name}} ({{ basicBio.username}})</strong></p>
     </header>
-    <!-- <section class="modal-card-body">
+    <section class="modal-card-body">
       <div class="columns is-multiline">
-        <div v-if="candidateInfo" class="column is-12">
+        <div v-if="basicBio" class="column is-12">
           <article class="media media-modal">
             <figure class="media-left">
               <p class="image">
-                <img v-if="candidateInfo.artworkUrl100" :src="replaceArtworkUrlSize(candidateInfo.artworkUrl100, '130x130')">
+                <img v-if="basicBio.candidateId" :src="basicBio.pictureThumbnail">
               </p>
             </figure>
             <div class="media-content">
-              <div class="content" v-if="candidateInfo">
-                  {{ candidateInfo.artistName}} <br>
-                  {{ candidateInfo.primaryGenreName}} <br>
-                  {{candidateInfo.trackCount}} Songs<br>
-                  <span class="has-text-grey-light" v-if="candidateInfo.releaseDate">Release: {{candidateInfo.releaseDate | moment("dddd, MMMM Do YYYY") }}</span>
+              <div class="content" v-if="basicBio">
+                  {{basicBio.professionalHeadline}} <br>
+                  <span class="has-text-grey-light" v-if="basicBio.location">{{basicBio.location}}</span>
               </div>
               <div class="level is-mobile">
-                    <div class="level-left">
-                      <a  class="level-item" :href="candidateInfo.collectionViewUrl" target="_blank">
-                        <b-tooltip type="is-light" label="Download on iTunes" position="is-top" :active="!isMobile">
-                          <i class="fab fa-itunes-note"></i>
-                        </b-tooltip>
-                      </a>
-                      <a class="level-item">
-                        <b-tooltip type="is-light" :label="isInBookmark(candidateInfo.collectionCensoredName) ? 'click to unbookmarked' : 'click to bookmark'" position="is-top" :active="!isMobile">
-                          <i @click="clickBookmarkCandidate(candidateInfo)" class="fas bookmarkIcon" :class="[{'favorite': isInBookmark(candidateInfo.collectionCensoredName)}, settings.bookmarkIcon]"></i>
-                        </b-tooltip>
-                      </a>
-                      <a v-if="settings.youtubeLink === 'true'" class="level-item" :href="`https://www.youtube.com/results?search_query=${candidateInfo.artistName} - ${candidateInfo.collectionCensoredName}`" target="_blank">
-                        <b-tooltip type="is-light" label="search on youtube" position="is-top" :active="!isMobile">
-                          <i class="fab fa-youtube"></i>
-                        </b-tooltip>
-                      </a>
-                    </div>
-                  </div>
+                <div class="level-left">
+                  <a class="level-item">
+                    <b-tooltip type="is-light" :label="isInBookmark(basicBio.username) ? 'click to unbookmarked' : 'click to bookmark'" position="is-top" :active="!isMobile">
+                      <i @click="clickBookmarkCandidate(basicBio)" class="fas bookmarkIcon" :class="[{'favorite': isInBookmark(basicBio.username)}, settings.bookmarkIcon]"></i>
+                    </b-tooltip>
+                  </a>
+                </div>
+              </div>
             </div>
           </article>
         </div>
         <div class="column is-12"  >
-          <b-table :data="albumTrackList"  >
-               <template slot-scope="props">
-                 <b-table-column field="track_number" label="Number" >
-                    {{ props.row.trackNumber }}
-                </b-table-column>
-                <b-table-column field="track_title" label="Track Title" >
-                    {{ props.row.trackName }}
-                </b-table-column>
-                <b-table-column field="track_duration" label="Duration" centered>
-                    {{  millisToMinutesAndSeconds(props.row.trackTimeMillis) }}
-                </b-table-column>
-                <b-table-column field="itunes_link" label="iTunes Link" centered>
-                  <a :href="props.row.trackViewUrl" target="_blank">
-                    <b-tooltip type="is-light" label="Download on iTunes" position="is-top" :active="!isMobile">
-                      <i class="fab fa-itunes-note"></i>
-                    </b-tooltip>
-                  </a>
-                </b-table-column>
-                <b-table-column  v-if="settings.youtubeLink === 'true'"  field="youtube_search" label="Youtube Search" centered>
-                  <a v-if="settings.youtubeLink === 'true'"  :href="`https://www.youtube.com/results?search_query=${props.row.artistName} - ${props.row.trackName}`" target="_blank">
-                    <b-tooltip type="is-light" label="search on youtube" position="is-top" :active="!isMobile">
-                      <i class="fab fa-youtube"></i>
-                    </b-tooltip>
-                  </a>
-                </b-table-column>
-               </template>
+          <b-table :data="experiencesList"  >
+            <template slot-scope="props">
+              <b-table-column field="experience_title" label="Organizations" centered>
+                  {{ props.row.organizations }}
+              </b-table-column>
+              <b-table-column field="experience_number" label="Name" centered>
+                {{ props.row.name }}
+              </b-table-column>
+              <b-table-column field="experience_duration" label="Duration" centered>
+                {{ props.row.duration }}
+              </b-table-column>
+            </template>
           </b-table>
         </div>
       </div>
-    </section> -->
+    </section>
     <footer class="modal-card-foot">
       <button class="button" type="button" @click="$parent.close()">Close</button>
     </footer>
@@ -80,10 +54,10 @@
 
 <script>
 export default {
-  name: 'TrackList',
+  name: 'BioDetail',
   props: {
     bioDetails: {
-      type: Array,
+      type: Object,
       required: true
     },
     replaceArtworkUrlSize: {
@@ -109,20 +83,35 @@ export default {
   },
   mounted () {
     this.showCandidateInfo()
-    this.showAlbumTrackList()
+    this.showExperiencesList()
+    this.showJobsList()
+    this.showStrengths()
+    this.showInterests()
+    this.showProfessionalCulture()
   },
   methods: {
-    showAlbumTrackList () {
-      this.bioDetails.shift()
-      this.albumTrackList = this.bioDetails
-    },
     showCandidateInfo () {
-      this.candidateInfo = this.bioDetails.basicBio
+      this.basicBio = this.bioDetails.basicBio
+    },
+    showExperiencesList () {
+      this.experiencesList = this.bioDetails.experiences
+    },
+    showJobsList () {
+      this.jobsList = this.bioDetails.jobs
+    },
+    showStrengths () {
+      this.strengths = this.bioDetails.strengths
+    },
+    showInterests () {
+      this.interests = this.bioDetails.interests
+    },
+    showProfessionalCulture () {
+      this.professionalCulture = this.bioDetails.professionalCulture
     },
     onSort (field, order) {
       this.sortField = field
       this.sortOrder = order
-      this.showAlbumTrackList()
+      this.showExperiencesList()
     },
     millisToMinutesAndSeconds (millis) {
       const minutes = Math.floor(millis / 60000)
@@ -132,8 +121,12 @@ export default {
   },
   data () {
     return {
-      candidateInfo: {},
-      albumTrackList: []
+      basicBio: {},
+      experiencesList: [],
+      jobsList: [],
+      strengths: '',
+      interests: '',
+      professionalCulture: ''
     }
   }
 }
