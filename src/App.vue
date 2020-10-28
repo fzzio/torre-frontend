@@ -7,7 +7,7 @@
         @clickShowBookmarks="showBookmarks"
         @clickSettings="showSettingsModal"
         @clickTitle="setPageType('search')"
-        @clickCandidateName='getAlbumTracks'
+        @clickCandidateName='getExtendedBio'
         :pageType="pageType"
         :recentSearch="recentSearch"
         :bookmarkCandidates="bookmarkCandidates"
@@ -35,7 +35,7 @@
       </transition>
       <candidate-list
         @clickUpdateSettings="updateSettings"
-        @clickCandidateName='getAlbumTracks'
+        @clickCandidateName='getExtendedBio'
         :clickBookmarkCandidate="bookmarkCandidate"
         :replaceArtworkUrlSize="replaceArtworkUrlSize"
         :isInBookmark="isInBookmark"
@@ -160,7 +160,8 @@ export default {
   methods: {
     searchCandidates (query) {
       if (query) {
-        const payload = { 'url': `/api/search?term=${query}&entity=album&media=music`, 'query': query }
+        // const payload = { 'url': `/api/search?term=${query}&entity=album&media=music`, 'query': query }
+        const payload = { 'url': `/api/candidate/search`, 'query': query }
         this.$store.dispatch('SEARCH_CANDIDATES', payload)
       }
       this.$store.commit('SET_PAGE_TYPE', 'search')
@@ -175,16 +176,16 @@ export default {
       this.$store.dispatch('REMOVE_RECENT_SEARCH_ITEM', item)
     },
     bookmarkCandidate (candidate) {
-      if (this.isInBookmark(candidate.collectionCensoredName)) {
+      if (this.isInBookmark(candidate.username)) {
         this.$dialog.confirm({
-          message: `Are you sure you want to unbookmark this candidate? <b>${candidate.collectionCensoredName} candidate</b>`,
+          message: `Are you sure you want to unbookmark '<b>${candidate.username}</b>' candidate?`,
           type: 'is-danger',
           hasIcon: true,
           onConfirm: () => {
             this.$store.dispatch('BOOKMARK_CANDIDATE', { 'candidate': candidate, 'status': 'unbookmarked' })
             this.$toast.open({
               duration: 3000,
-              message: `"${candidate.collectionCensoredName} candidate" has been unbookmark!`,
+              message: `"${candidate.username}" candidate has been unbookmark!`,
               position: 'is-bottom-right',
               type: 'is-danger'
             })
@@ -193,15 +194,15 @@ export default {
       } else {
         this.$toast.open({
           duration: 3000,
-          message: `"${candidate.collectionCensoredName} candidate" bookmarked!`,
+          message: `"${candidate.username} candidate" bookmarked!`,
           position: 'is-bottom',
           type: 'is-info'
         })
         this.$store.dispatch('BOOKMARK_CANDIDATE', { 'candidate': candidate, 'status': 'bookmark' })
       }
     },
-    isInBookmark (candidateName) {
-      return this.bookmarkCandidates.findIndex(candidate => candidate.collectionCensoredName === candidateName) > -1
+    isInBookmark (username) {
+      return this.bookmarkCandidates.findIndex(candidate => candidate.username === username) > -1
     },
     showBookmarks () {
       this.$store.commit('SET_PAGE_TYPE', 'bookmarks')
@@ -213,10 +214,11 @@ export default {
     showSettingsModal () {
       this.isSettingsModalActive = true
     },
-    getAlbumTracks (candidateId) {
-      if (candidateId) {
+    getExtendedBio (username) {
+      if (username) {
         this.isAlbumTracksModalActive = true
-        const payload = { 'url': `/api/lookup?id=${candidateId}&entity=song` }
+        // const payload = { 'url': `/api/lookup?id=${username}&entity=song` }
+        const payload = { 'url': `/api/candidate/extended/${username}` }
         this.$store.dispatch('GET_ALBUM_TRACKS', payload)
       }
     },

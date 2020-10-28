@@ -7,7 +7,14 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    settings: { initialSearchQuery: 'eminem', searchQuery: '', panelType: 'card', bookmarkIcon: 'fa-star', perPage: '20', youtubeLink: 'false' },
+    settings: {
+      initialSearchQuery: 'Developer',
+      searchQuery: '',
+      panelType: 'card',
+      bookmarkIcon: 'fa-star',
+      perPage: '20',
+      youtubeLink: 'false'
+    },
     candidates: [],
     albumTracks: [],
     bookmarkCandidates: [],
@@ -129,7 +136,13 @@ export default new Vuex.Store({
       try {
         // show loading animation
         commit('IS_CANDIDATE_LOADING', true)
-        const { data } = await axios.get(`${payload.url}`)
+        // const { data } = await axios.get(`${payload.url}`)
+        const { data } = await axios.post(`${payload.url}`, {
+          skills: payload.query,
+          size: 5,
+          offset: 0
+        })
+        console.log(data)
         if (data.results.length === 0) {
           // if search response data results is empty commit search failed and clear the search input
           commit('CLEAR_SEARCH')
@@ -208,16 +221,16 @@ export default new Vuex.Store({
     BOOKMARK_CANDIDATE: ({ commit }, payload) => {
       try {
         // destructure and assign payload candidate objects to the new variables
-        const { artistName, collectionCensoredName, artworkUrl100, primaryGenreName, collectionViewUrl, collectionId } = payload.candidate
+        const { name, username, pictureThumbnail, professionalHeadline, location, candidateId } = payload.candidate
         // assign the new payload candidate variables as object items to newBookmarkItem variable
-        const newBookmarkItem = { artistName, collectionCensoredName, artworkUrl100, primaryGenreName, collectionViewUrl, collectionId }
+        const newBookmarkItem = { name, username, pictureThumbnail, professionalHeadline, location, candidateId }
         let bookmarkCandidates = []
         // check payload status
         if (payload.status === 'unbookmarked') {
           // if status is unbookmarked assign bookmark_candidates localstorage to bookmarkCandidates
           bookmarkCandidates = JSON.parse(localStorage.getItem('bookmark_candidates'))
           // check if the bookmarkCandidates item is already in the array
-          const oldBookmarkCandidates = bookmarkCandidates.map((e) => { return e.collectionCensoredName }).indexOf(collectionCensoredName)
+          const oldBookmarkCandidates = bookmarkCandidates.map((e) => { return e.username }).indexOf(username)
           // if is in the array remove payload item to bookmarkCandidates
           if (oldBookmarkCandidates !== -1) bookmarkCandidates.splice(oldBookmarkCandidates, 1)
           // set the new bookmarkCandidates array to the localstorage

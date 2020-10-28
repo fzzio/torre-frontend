@@ -2,18 +2,19 @@
   <section class="section searchbar">
     <div class="container">
       <b-field>
-        <b-autocomplete size="is-medium"
-        expanded
+        <b-autocomplete
+          size="is-medium"
+          expanded
           v-model="searchQuery"
           :data="filteredDataArray"
-          placeholder="e.g. Eminem"
+          placeholder="e.g. Developer, Software Engineer"
           icon="magnify"
           @select="option => selected = option"
           @keyup.enter="onClickSearch"
         ></b-autocomplete>
         <p class="control" v-if="searchQuery">
-               <button @click="onClickClearSearch" class="button  is-medium "><i class="fas fa-times"></i></button>
-            </p>
+          <button @click="onClickClearSearch" class="button  is-medium "><i class="fas fa-times"></i></button>
+        </p>
       </b-field>
     </div>
   </section>

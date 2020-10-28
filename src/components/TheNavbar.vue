@@ -22,19 +22,21 @@
               <!-- Dropdown -->
               <b-dropdown v-else hoverable position="is-bottom-left">
                 <i slot="trigger" @click="onClickShowBookmarks" class="fas fa-2x" :class="[{'icon-active': pageType === 'bookmarks'}, settings.bookmarkIcon]"></i>
-                  <b-dropdown-item  v-for="(candidate, index) in latestBookmarkCandidates" :key="index" @click="onClickCandidateName(candidate.collectionId)" >
+                  <b-dropdown-item  v-for="(candidate, index) in latestBookmarkCandidates" :key="index" @click="onClickCandidateUsername(candidate.username)" >
                     <article class="media">
                       <figure class="media-left">
                          <p class="image is-64x64 ">
-                        <img :src="candidate.artworkUrl100">
+                        <img :src="candidate.pictureThumbnail">
                         </p>
                       </figure>
                       <div class="media-content  overflow-content">
                         <div class="content ">
                           <p>
-                            <strong>{{candidate.collectionCensoredName}}</strong>
+                            <strong>{{candidate.name}}</strong>
                             <br>
-                            {{candidate.artistName}}
+                            {{candidate.professionalHeadline}}
+                            <br>
+                            {{candidate.location}}
                           </p>
                         </div>
                       </div>
@@ -103,8 +105,8 @@ export default {
     onClickTitle () {
       this.$emit('clickTitle')
     },
-    onClickCandidateName (candidateId) {
-      this.$emit('clickCandidateName', candidateId)
+    onClickCandidateUsername (username) {
+      this.$emit('clickCandidateName', username)
     }
 
   }
