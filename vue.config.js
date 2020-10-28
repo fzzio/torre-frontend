@@ -3,7 +3,7 @@ module.exports = {
   devServer: {
     proxy: {
       '/api/': {
-        target: 'https://floating-everglades-26974.herokuapp.com/',
+        target: 'https://floating-everglades-26974.herokuapp.com',
         changeOrigin: true,
         pathRewrite: { '^/api/': '' }
       }
