@@ -16,25 +16,25 @@
               <span class="badge" v-if="recentSearch.length > 0">{{recentSearch.length}}</span>
             </div>
             <span class="icon is-large nav-icon">
-              <b-tooltip v-if="pageType === 'bookmarks' || isMobile || bookmarkCandidates.length === 0" type="is-light" :label="`${bookmarkCandidates.length} album bookmarks`" position="is-bottom" :active="!isMobile" >
+              <b-tooltip v-if="pageType === 'bookmarks' || isMobile || bookmarkCandidates.length === 0" type="is-light" :label="`${bookmarkCandidates.length} candidate bookmarks`" position="is-bottom" :active="!isMobile" >
                 <i @click="onClickShowBookmarks" class="fas fa-2x" :class="[{'icon-active': pageType === 'bookmarks'}, settings.bookmarkIcon]"></i>
               </b-tooltip>
               <!-- Dropdown -->
               <b-dropdown v-else hoverable position="is-bottom-left">
                 <i slot="trigger" @click="onClickShowBookmarks" class="fas fa-2x" :class="[{'icon-active': pageType === 'bookmarks'}, settings.bookmarkIcon]"></i>
-                  <b-dropdown-item  v-for="(album, index) in latestBookmarkCandidates" :key="index" @click="onClickAlbumName(album.collectionId)" >
+                  <b-dropdown-item  v-for="(candidate, index) in latestBookmarkCandidates" :key="index" @click="onClickAlbumName(candidate.collectionId)" >
                     <article class="media">
                       <figure class="media-left">
                          <p class="image is-64x64 ">
-                        <img :src="album.artworkUrl100">
+                        <img :src="candidate.artworkUrl100">
                         </p>
                       </figure>
                       <div class="media-content  overflow-content">
                         <div class="content ">
                           <p>
-                            <strong>{{album.collectionCensoredName}}</strong>
+                            <strong>{{candidate.collectionCensoredName}}</strong>
                             <br>
-                            {{album.artistName}}
+                            {{candidate.artistName}}
                           </p>
                         </div>
                       </div>

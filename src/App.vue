@@ -174,17 +174,17 @@ export default {
     removeRecentSearchItem (item) {
       this.$store.dispatch('REMOVE_RECENT_SEARCH_ITEM', item)
     },
-    bookmarkCandidate (album) {
-      if (this.isInBookmark(album.collectionCensoredName)) {
+    bookmarkCandidate (candidate) {
+      if (this.isInBookmark(candidate.collectionCensoredName)) {
         this.$dialog.confirm({
-          message: `Are you sure you want to unbookmark this album? <b>${album.collectionCensoredName} album</b>`,
+          message: `Are you sure you want to unbookmark this candidate? <b>${candidate.collectionCensoredName} candidate</b>`,
           type: 'is-danger',
           hasIcon: true,
           onConfirm: () => {
-            this.$store.dispatch('BOOKMARK_CANDIDATE', { 'album': album, 'status': 'unbookmarked' })
+            this.$store.dispatch('BOOKMARK_CANDIDATE', { 'candidate': candidate, 'status': 'unbookmarked' })
             this.$toast.open({
               duration: 3000,
-              message: `"${album.collectionCensoredName} album" has been unbookmark!`,
+              message: `"${candidate.collectionCensoredName} candidate" has been unbookmark!`,
               position: 'is-bottom-right',
               type: 'is-danger'
             })
@@ -193,15 +193,15 @@ export default {
       } else {
         this.$toast.open({
           duration: 3000,
-          message: `"${album.collectionCensoredName} album" bookmarked!`,
+          message: `"${candidate.collectionCensoredName} candidate" bookmarked!`,
           position: 'is-bottom',
           type: 'is-info'
         })
-        this.$store.dispatch('BOOKMARK_CANDIDATE', { 'album': album, 'status': 'bookmark' })
+        this.$store.dispatch('BOOKMARK_CANDIDATE', { 'candidate': candidate, 'status': 'bookmark' })
       }
     },
-    isInBookmark (albumName) {
-      return this.bookmarkCandidates.findIndex(album => album.collectionCensoredName === albumName) > -1
+    isInBookmark (candidateName) {
+      return this.bookmarkCandidates.findIndex(candidate => candidate.collectionCensoredName === candidateName) > -1
     },
     showBookmarks () {
       this.$store.commit('SET_PAGE_TYPE', 'bookmarks')

@@ -1,7 +1,7 @@
 <template>
 <div  class="modal-card" style="width: auto; max-width: 980px; height: auto; max-height: 700px"  >
     <header class="modal-card-head">
-      <p class="modal-card-title" v-if="candidateInfo"><strong>{{candidateInfo.collectionCensoredName}} album</strong></p>
+      <p class="modal-card-title" v-if="candidateInfo"><strong>{{candidateInfo.collectionCensoredName}} candidate</strong></p>
     </header>
   <section class="modal-card-body">
       <div class="columns is-multiline">
