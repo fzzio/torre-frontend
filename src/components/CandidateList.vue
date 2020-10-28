@@ -107,7 +107,7 @@
           <div class="column is-12" v-if="candidates.length > 0">
             <hr>
             <b-pagination
-                :total="candidates.length"
+                :total="totalCandidates"
                 :current.sync="current"
                 :order="order"
                 :size="size"
@@ -153,6 +153,10 @@ export default {
   props: {
     candidates: {
       type: Array,
+      required: true
+    },
+    totalCandidates: {
+      type: Number,
       required: true
     },
     pageType: {

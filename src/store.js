@@ -16,6 +16,7 @@ export default new Vuex.Store({
       offset: 0
     },
     candidates: [],
+    totalCandidates: 0,
     bioDetails: [],
     bookmarkCandidates: [],
     searchFailed: false,
@@ -37,6 +38,9 @@ export default new Vuex.Store({
     },
     GET_CANDIDATES: (state) => {
       return state.candidates
+    },
+    GET_TOTAL_CANDIDATES: (state) => {
+      return state.totalCandidates
     },
     GET_BIO_DETAILS: (state) => {
       return state.bioDetails
@@ -74,8 +78,11 @@ export default new Vuex.Store({
       state.pageType = 'search'
       state.settings.searchQuery = query
     },
-    SET_CANDIDATE: (state, data) => {
+    SET_CANDIDATES: (state, data) => {
       state.candidates = data
+    },
+    SET_TOTAL_CANDIDATES: (state, data) => {
+      state.totalCandidates = data
     },
     SET_BIO_DETAILS: (state, data) => {
       state.bioDetails = data
@@ -151,7 +158,8 @@ export default new Vuex.Store({
           // assign the search data results to set candidate state and query to set search query state
           commit('IS_CANDIDATE_LOADING', false)
           commit('SEARCH_FAILED', false)
-          commit('SET_CANDIDATE', data.results)
+          commit('SET_CANDIDATES', data.results)
+          commit('SET_TOTAL_CANDIDATES', data.resultCount)
           commit('SET_SEARCH_QUERY', payload.query)
           dispatch('SAVE_TO_RECENT_SEARCH', payload.query)
         }
