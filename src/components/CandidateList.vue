@@ -186,10 +186,6 @@ export default {
     isInBookmark: {
       type: Function,
       required: true
-    },
-    replaceArtworkUrlSize: {
-      type: Function,
-      required: true
     }
   },
   computed: {

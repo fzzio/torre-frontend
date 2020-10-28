@@ -81,10 +81,6 @@ export default {
       type: Object,
       required: true
     },
-    replaceArtworkUrlSize: {
-      type: Function,
-      required: true
-    },
     settings: {
       type: Object,
       required: true

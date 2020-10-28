@@ -37,7 +37,6 @@
         @clickUpdateSettings="updateSettings"
         @clickCandidateUsername='getBioDetails'
         :clickBookmarkCandidate="bookmarkCandidate"
-        :replaceArtworkUrlSize="replaceArtworkUrlSize"
         :isInBookmark="isInBookmark"
         :candidates="pageType === 'search' ? candidates: bookmarkCandidates"
         :pageType="pageType"
@@ -85,7 +84,6 @@
           :bioDetails="bioDetails"
           :clickBookmarkCandidate="bookmarkCandidate"
           :isInBookmark="isInBookmark"
-          :replaceArtworkUrlSize="replaceArtworkUrlSize"
           :settings="settings"
           :isMobile="isMobile"
           >
@@ -160,7 +158,6 @@ export default {
   methods: {
     searchCandidates (query) {
       if (query) {
-        // const payload = { 'url': `/api/search?term=${query}&entity=album&media=music`, 'query': query }
         const payload = { 'url': `/api/candidate/search`, 'query': query }
         this.$store.dispatch('SEARCH_CANDIDATES', payload)
       }
@@ -217,7 +214,6 @@ export default {
     getBioDetails (username) {
       if (username) {
         this.isBioDetailsModalActive = true
-        // const payload = { 'url': `/api/lookup?id=${username}&entity=song` }
         const payload = { 'url': `/api/candidate/extended/${username}` }
         this.$store.dispatch('GET_BIO_DETAILS', payload)
       }
@@ -233,9 +229,6 @@ export default {
     },
     resetBioDetails () {
       this.$store.commit('RESET_BIO_DETAILS')
-    },
-    replaceArtworkUrlSize (albumArtwork, newSize) {
-      return albumArtwork.replace('100x100', newSize)
     },
     toggleNavbar () {
       let scrollBarPosition = window.pageYOffset | document.body.scrollTop

@@ -50,25 +50,6 @@
           </b-field>
           </div>
         <div class="column is-6">
-          <label>Search on youtube icon</label>
-        </div>
-        <div class="column is-6">
-            <b-field>
-                  <b-radio-button v-model="settings.youtubeLink"
-                      native-value="true"
-                      type="is-primary">
-                      <b-icon pack="fas" icon="check"></b-icon>
-                      <span>Show</span>
-                  </b-radio-button>
-                  <b-radio-button v-model="settings.youtubeLink"
-                      native-value="false"
-                      type="is-primary">
-                      <b-icon pack="fas" icon="times"></b-icon>
-                      <span>Hide</span>
-                  </b-radio-button>
-            </b-field>
-        </div>
-        <div class="column is-6">
           <label>Search Results Per Page</label>
         </div>
         <div class="column is-6">
@@ -113,9 +94,6 @@ export default {
     },
     'settings.bookmarkIcon' (settingValue) {
       this.onClickUpdateSettings('bookmarkIcon', settingValue)
-    },
-    'settings.youtubeLink' (settingValue) {
-      this.onClickUpdateSettings('youtubeLink', settingValue)
     },
     'settings.perPage' (settingValue) {
       this.onClickUpdateSettings('perPage', settingValue)

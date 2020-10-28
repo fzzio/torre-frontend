@@ -12,8 +12,8 @@ export default new Vuex.Store({
       searchQuery: '',
       panelType: 'card',
       bookmarkIcon: 'fa-star',
-      perPage: '20',
-      youtubeLink: 'false'
+      perPage: 20,
+      offset: 0
     },
     candidates: [],
     bioDetails: [],
@@ -136,11 +136,10 @@ export default new Vuex.Store({
       try {
         // show loading animation
         commit('IS_CANDIDATE_LOADING', true)
-        // const { data } = await axios.get(`${payload.url}`)
         const { data } = await axios.post(`${payload.url}`, {
           skills: payload.query,
-          size: 5,
-          offset: 0
+          size: parseInt(JSON.parse(localStorage.getItem('settings')).perPage),
+          offset: parseInt(JSON.parse(localStorage.getItem('settings')).offset)
         })
         // console.log(data)
         if (data.results.length === 0) {
@@ -305,7 +304,7 @@ export default new Vuex.Store({
       try {
         // show loading animation
         commit('IS_BIO_DETAILS_LOADING', true)
-        // reset bioDetails tracks
+        // reset bioDetails
         if (state.bioDetails.length > 0) {
           commit('RESET_BIO_DETAILS')
         }
