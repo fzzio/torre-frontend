@@ -208,7 +208,7 @@ export default new Vuex.Store({
     BOOKMARK_CANDIDATE: ({ commit }, payload) => {
       try {
         // destructure and assign payload candidate objects to the new variables
-        const { artistName, collectionCensoredName, artworkUrl100, primaryGenreName, collectionViewUrl, collectionId } = payload.album
+        const { artistName, collectionCensoredName, artworkUrl100, primaryGenreName, collectionViewUrl, collectionId } = payload.candidate
         // assign the new payload candidate variables as object items to newBookmarkItem variable
         const newBookmarkItem = { artistName, collectionCensoredName, artworkUrl100, primaryGenreName, collectionViewUrl, collectionId }
         let bookmarkCandidates = []
