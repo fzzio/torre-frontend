@@ -32,7 +32,7 @@
                   <div class="card-content">
                     <div class="media">
                       <div class="media-content overflow-content">
-                        <div class="title is-size-6-widescreen is-size-6-desktop candidate-name" ><a v-if="candidate.collectionId" @click="onClickAlbumName(candidate.collectionId)">{{candidate.collectionCensoredName}}</a></div>
+                        <div class="title is-size-6-widescreen is-size-6-desktop candidate-name" ><a v-if="candidate.collectionId" @click="onClickCandidateName(candidate.collectionId)">{{candidate.collectionCensoredName}}</a></div>
                         <div class="subtitle is-6">{{candidate.artistName}} <br>
                         <span class="has-text-grey-light">{{candidate.primaryGenreName}}</span></div>
                       </div>
@@ -66,7 +66,7 @@
                   <div class="media-content">
                     <div class="content overflow-content">
                       <div>
-                        <strong><a v-if="candidate.collectionId" @click="onClickAlbumName(candidate.collectionId)">{{candidate.collectionCensoredName}}</a></strong> <br>
+                        <strong><a v-if="candidate.collectionId" @click="onClickCandidateName(candidate.collectionId)">{{candidate.collectionCensoredName}}</a></strong> <br>
                         {{candidate.artistName}} ( <span class="has-text-grey-light">{{candidate.primaryGenreName}}</span> )
                       </div>
                     </div>
@@ -214,7 +214,7 @@ export default {
       const settingValue = this.settings.panelType === 'card' ? 'media' : 'card'
       this.$emit('clickUpdateSettings', 'panelType', settingValue)
     },
-    onClickAlbumName (candidateId) {
+    onClickCandidateName (candidateId) {
       this.$emit('clickCandidateName', candidateId)
     }
   }
