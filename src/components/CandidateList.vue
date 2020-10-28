@@ -1,7 +1,7 @@
 <template>
     <section class="section">
       <div class="container" style="margin-top:0px;">
-        <div class="columns is-multiline is-mobile" v-if="!isCandidatesLoading && candidates.length > 0">
+        <div class="columns is-multiline is-mobile" v-if="!isCandidateLoading && candidates.length > 0">
           <div class="column is-6" >
             <span class="is-size-5-desktop is-size-6-mobile has-text-grey" v-if="pageType !== 'bookmarks'"> Search Results </span>
             <span class="is-size-5-desktop is-size-6-mobile has-text-grey" v-else> Bookmarks</span></div>
@@ -14,7 +14,7 @@
         </div>
         <!-- Candidate List -->
         <transition name="list" mode="out-in" >
-          <div class="columns is-multiline is-mobile" v-if="!isCandidatesLoading && displayedCandidates.length > 0" :key="pageType">
+          <div class="columns is-multiline is-mobile" v-if="!isCandidateLoading && displayedCandidates.length > 0" :key="pageType">
               <div  class="column"
                 :class="[settings.panelType === 'card' ? 'is-3-widescreen is-3-desktop is-4-tablet' : 'is-4-widescreen  is-4-desktop is-6-tablet is-12-mobile']"
                 v-for="album in displayedCandidates"
@@ -32,7 +32,7 @@
                   <div class="card-content">
                     <div class="media">
                       <div class="media-content overflow-content">
-                        <div class="title is-size-6-widescreen is-size-6-desktop candidate-name" ><a v-if="album.collectionId" @click="onClickCandidateName(album.collectionId)">{{album.collectionCensoredName}}</a></div>
+                        <div class="title is-size-6-widescreen is-size-6-desktop candidate-name" ><a v-if="album.collectionId" @click="onClickAlbumName(album.collectionId)">{{album.collectionCensoredName}}</a></div>
                         <div class="subtitle is-6">{{album.artistName}} <br>
                         <span class="has-text-grey-light">{{album.primaryGenreName}}</span></div>
                       </div>
@@ -66,7 +66,7 @@
                   <div class="media-content">
                     <div class="content overflow-content">
                       <div>
-                        <strong><a v-if="album.collectionId" @click="onClickCandidateName(album.collectionId)">{{album.collectionCensoredName}}</a></strong> <br>
+                        <strong><a v-if="album.collectionId" @click="onClickAlbumName(album.collectionId)">{{album.collectionCensoredName}}</a></strong> <br>
                         {{album.artistName}} ( <span class="has-text-grey-light">{{album.primaryGenreName}}</span> )
                       </div>
                     </div>
@@ -95,13 +95,13 @@
             </div>
           </transition>
           <!-- Loading animation -->
-          <div class="columns is-mobile" v-if="isCandidatesLoading">
+          <div class="columns is-mobile" v-if="isCandidateLoading">
             <div class="column loading">
-                <b-loading :is-full-page="false" :active.sync="isCandidatesLoading" :can-cancel="false"></b-loading>
+                <b-loading :is-full-page="false" :active.sync="isCandidateLoading" :can-cancel="false"></b-loading>
             </div>
           </div>
           <!-- Pagination -->
-          <div class="columns is-multiline is-mobile" v-if="!isCandidatesLoading && candidates.length > 0">
+          <div class="columns is-multiline is-mobile" v-if="!isCandidateLoading && candidates.length > 0">
             <div class="column is-12" v-if="candidates.length > 0">
               <hr>
               <b-pagination
@@ -124,7 +124,7 @@
             </div>
           </template>
           <!-- Search results message -->
-          <template v-if="searchFailed && !isCandidatesLoading">
+          <template v-if="searchFailed && !isCandidateLoading">
           <div class="columns is-multiline is-mobile">
             <div class="column">
               <h3 class="title is-4 has-text-centered">Nothing found. </h3>
@@ -157,7 +157,7 @@ export default {
       type: String,
       required: true
     },
-    isCandidatesLoading: {
+    isCandidateLoading: {
       type: Boolean,
       required: true
     },
@@ -214,7 +214,7 @@ export default {
       const settingValue = this.settings.panelType === 'card' ? 'media' : 'card'
       this.$emit('clickUpdateSettings', 'panelType', settingValue)
     },
-    onClickCandidateName (candidateId) {
+    onClickAlbumName (candidateId) {
       this.$emit('clickCandidateName', candidateId)
     }
   }

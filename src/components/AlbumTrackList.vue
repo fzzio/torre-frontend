@@ -80,9 +80,9 @@
 
 <script>
 export default {
-  name: 'CandidateBio',
+  name: 'TrackList',
   props: {
-    candidateBio: {
+    albumTracks: {
       type: Array,
       required: true
     },
@@ -108,16 +108,16 @@ export default {
     }
   },
   mounted () {
-    this.showAlbumInfo()
+    this.showCandidateInfo()
     this.showAlbumTrackList()
   },
   methods: {
     showAlbumTrackList () {
-      this.candidateBio.shift()
-      this.albumTrackList = this.candidateBio
+      this.albumTracks.shift()
+      this.albumTrackList = this.albumTracks
     },
-    showAlbumInfo () {
-      this.candidateInfo = this.candidateBio[0]
+    showCandidateInfo () {
+      this.candidateInfo = this.albumTracks[0]
     },
     onSort (field, order) {
       this.sortField = field
