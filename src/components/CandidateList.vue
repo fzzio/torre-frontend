@@ -217,7 +217,7 @@ export default {
       this.$emit('clickUpdateSettings', 'panelType', settingValue)
     },
     onClickCandidateUsername (username) {
-      this.$emit('clickCandidateName', username)
+      this.$emit('clickCandidateUsername', username)
     }
   }
 }

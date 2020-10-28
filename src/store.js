@@ -16,14 +16,14 @@ export default new Vuex.Store({
       youtubeLink: 'false'
     },
     candidates: [],
-    albumTracks: [],
+    bioDetails: [],
     bookmarkCandidates: [],
     searchFailed: false,
-    albumTracksFailed: false,
+    bioDetailsFailed: false,
     recentSearch: [],
     showRecentSearchBox: false,
     isCandidateLoading: false,
-    isAlbumTracksLoading: false,
+    isBioDetailsLoading: false,
     language: 'en_us',
     pageType: 'search',
     appError: null
@@ -38,8 +38,8 @@ export default new Vuex.Store({
     GET_CANDIDATES: (state) => {
       return state.candidates
     },
-    GET_ALBUM_TRACKS: (state) => {
-      return state.albumTracks
+    GET_BIO_DETAILS: (state) => {
+      return state.bioDetails
     },
     GET_RECENT_SEARCH: (state) => {
       return state.recentSearch
@@ -47,14 +47,14 @@ export default new Vuex.Store({
     IS_CANDIDATE_LOADING: (state) => {
       return state.isCandidateLoading
     },
-    IS_ALBUM_TRACKS_LOADING: (state) => {
-      return state.isAlbumTracksLoading
+    IS_BIO_DETAILS_LOADING: (state) => {
+      return state.isBioDetailsLoading
     },
     SEARCH_FAILED: (state) => {
       return state.searchFailed
     },
-    ALBUM_TRACKS_FAILED: (state) => {
-      return state.albumTracksFailed
+    BIO_DETAILS_FAILED: (state) => {
+      return state.bioDetailsFailed
     },
     BOOKMARK_CANDIDATES: (state) => {
       return state.bookmarkCandidates.reverse()
@@ -77,8 +77,8 @@ export default new Vuex.Store({
     SET_CANDIDATE: (state, data) => {
       state.candidates = data
     },
-    SET_ALBUM_TRACKS: (state, data) => {
-      state.albumTracks = data
+    SET_BIO_DETAILS: (state, data) => {
+      state.bioDetails = data
     },
     SEARCH_FAILED: (state, action) => {
       state.searchFailed = action
@@ -100,8 +100,8 @@ export default new Vuex.Store({
     IS_CANDIDATE_LOADING: (state, action) => {
       state.isCandidateLoading = action
     },
-    IS_ALBUM_TRACKS_LOADING: (state, action) => {
-      state.isAlbumTracksLoading = action
+    IS_BIO_DETAILS_LOADING: (state, action) => {
+      state.isBioDetailsLoading = action
     },
     SET_PAGE_TYPE: (state, type) => {
       if (type === 'bookmarks') { state.settings.searchQuery = '' }
@@ -110,12 +110,12 @@ export default new Vuex.Store({
     SET_SETTINGS: (state, settings) => {
       state.settings = settings
     },
-    SET_ALBUM_TRACKS_FAILED: (state, action) => {
-      state.albumTracksFailed = action
-      state.albumTracks = []
+    SET_BIO_DETAILS_FAILED: (state, action) => {
+      state.bioDetailsFailed = action
+      state.bioDetails = []
     },
-    RESET_ALBUM_TRACKS: (state) => {
-      state.albumTracks = []
+    RESET_BIO_DETAILS: (state) => {
+      state.bioDetails = []
     },
     APP_ERROR: (state, message) => {
       state.appError = message
@@ -142,7 +142,7 @@ export default new Vuex.Store({
           size: 5,
           offset: 0
         })
-        console.log(data)
+        // console.log(data)
         if (data.results.length === 0) {
           // if search response data results is empty commit search failed and clear the search input
           commit('CLEAR_SEARCH')
@@ -301,24 +301,25 @@ export default new Vuex.Store({
         commit('APP_ERROR', err.message)
       }
     },
-    GET_ALBUM_TRACKS: async ({ commit, state }, payload) => {
+    GET_BIO_DETAILS: async ({ commit, state }, payload) => {
       try {
         // show loading animation
-        commit('IS_ALBUM_TRACKS_LOADING', true)
+        commit('IS_BIO_DETAILS_LOADING', true)
         // reset album tracks
-        if (state.albumTracks.length > 0) {
-          commit('RESET_ALBUM_TRACKS')
+        if (state.bioDetails.length > 0) {
+          commit('RESET_BIO_DETAILS')
         }
         const { data } = await axios.get(`${payload.url}`)
-        if (data.results.length === 0) {
-          commit('SET_ALBUM_TRACKS_FAILED', true)
-          commit('IS_ALBUM_TRACKS_LOADING', false)
+        console.log(data)
+        if (data.length === 0) {
+          commit('SET_BIO_DETAILS_FAILED', true)
+          commit('IS_BIO_DETAILS_LOADING', false)
         } else {
-          commit('SET_ALBUM_TRACKS', data.results)
-          commit('IS_ALBUM_TRACKS_LOADING', false)
+          commit('SET_BIO_DETAILS', data)
+          commit('IS_BIO_DETAILS_LOADING', false)
         }
       } catch (err) {
-        commit('IS_ALBUM_TRACKS_LOADING', false)
+        commit('IS_BIO_DETAILS_LOADING', false)
         commit('APP_ERROR', err.message)
       }
     }

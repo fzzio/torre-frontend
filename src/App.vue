@@ -7,7 +7,7 @@
         @clickShowBookmarks="showBookmarks"
         @clickSettings="showSettingsModal"
         @clickTitle="setPageType('search')"
-        @clickCandidateName='getExtendedBio'
+        @clickCandidateUsername='getBioDetails'
         :pageType="pageType"
         :recentSearch="recentSearch"
         :bookmarkCandidates="bookmarkCandidates"
@@ -35,7 +35,7 @@
       </transition>
       <candidate-list
         @clickUpdateSettings="updateSettings"
-        @clickCandidateName='getExtendedBio'
+        @clickCandidateUsername='getBioDetails'
         :clickBookmarkCandidate="bookmarkCandidate"
         :replaceArtworkUrlSize="replaceArtworkUrlSize"
         :isInBookmark="isInBookmark"
@@ -59,19 +59,19 @@
       </b-modal>
       <!-- album tracklist modal -->
       <b-modal
-        :active.sync="isAlbumTracksModalActive"
+        :active.sync="isBioDetailsModalActive"
         :canCancel=true has-modal-card
-        :onCancel="resetAlbumTracks"
+        :onCancel="resetBioDetails"
         scroll="clip"
         >
-        <div class="columns is-mobile is-centered" v-if="!albumTracksFailed && albumTracks.length === 0" >
+        <div class="columns is-mobile is-centered" v-if="!bioDetailsFailed && bioDetails.length === 0" >
           <div class="columns is-mobile"  >
             <div class="column loading">
-                <b-loading :is-full-page="false" :active.sync="isAlbumTracksLoading" :can-cancel="false"></b-loading>
+                <b-loading :is-full-page="false" :active.sync="isBioDetailsLoading" :can-cancel="false"></b-loading>
             </div>
           </div>
         </div>
-        <div class="container" v-else-if="albumTracksFailed">
+        <div class="container" v-else-if="bioDetailsFailed">
           <div class="columns is-mobile is-centered"  >
             <div class="column is-4">
               <b-message  type="is-danger" has-icon >
@@ -81,15 +81,15 @@
             </div>
           </div>
         </div>
-        <album-track-list  v-else
-          :albumTracks="albumTracks"
+        <bio-detail  v-else
+          :bioDetails="bioDetails"
           :clickBookmarkCandidate="bookmarkCandidate"
           :isInBookmark="isInBookmark"
           :replaceArtworkUrlSize="replaceArtworkUrlSize"
           :settings="settings"
           :isMobile="isMobile"
           >
-        </album-track-list>
+        </bio-detail>
       </b-modal>
     </main>
     <the-footer :class="{'footer-fixed': pageType === 'search' && candidates.length === 0 || pageType === 'bookmarks' && bookmarkCandidates.length === 0 || isCandidateLoading }"></the-footer>
@@ -102,7 +102,7 @@ import TheSearchbar from './components/TheSearchbar'
 import RecentSearchBox from './components/RecentSearchBox'
 import CandidateList from './components/CandidateList'
 import TheSettings from './components/TheSettings'
-import AlbumTrackList from './components/AlbumTrackList'
+import BioDetail from './components/BioDetail'
 import TheFooter from './components/TheFooter'
 import { mapGetters } from 'vuex'
 export default {
@@ -110,7 +110,7 @@ export default {
   data () {
     return {
       isSettingsModalActive: false,
-      isAlbumTracksModalActive: false,
+      isBioDetailsModalActive: false,
       windowWidth: window.innerWidth,
       showNavbar: true
     }
@@ -121,23 +121,23 @@ export default {
     RecentSearchBox,
     TheSettings,
     CandidateList,
-    AlbumTrackList,
+    BioDetail,
     TheFooter
   },
   computed: {
     ...mapGetters({
       recentSearch: 'GET_RECENT_SEARCH',
       candidates: 'GET_CANDIDATES',
-      albumTracks: 'GET_ALBUM_TRACKS',
+      bioDetails: 'GET_BIO_DETAILS',
       searchQuery: 'SEARCH_QUERY',
       initialSearchQuery: 'INITIAL_SEARCH_QUERY',
       bookmarkCandidates: 'BOOKMARK_CANDIDATES',
       pageType: 'PAGE_TYPE',
       showRecentSearchBox: 'SHOW_RECENT_SEARCH_BOX',
       isCandidateLoading: 'IS_CANDIDATE_LOADING',
-      isAlbumTracksLoading: 'IS_ALBUM_TRACKS_LOADING',
+      isBioDetailsLoading: 'IS_BIO_DETAILS_LOADING',
       searchFailed: 'SEARCH_FAILED',
-      albumTracksFailed: 'ALBUM_TRACKS_FAILED',
+      bioDetailsFailed: 'BIO_DETAILS_FAILED',
       settings: 'GET_SETTINGS',
       isAppError: 'IS_APP_ERROR'
     }),
@@ -214,12 +214,12 @@ export default {
     showSettingsModal () {
       this.isSettingsModalActive = true
     },
-    getExtendedBio (username) {
+    getBioDetails (username) {
       if (username) {
-        this.isAlbumTracksModalActive = true
+        this.isBioDetailsModalActive = true
         // const payload = { 'url': `/api/lookup?id=${username}&entity=song` }
         const payload = { 'url': `/api/candidate/extended/${username}` }
-        this.$store.dispatch('GET_ALBUM_TRACKS', payload)
+        this.$store.dispatch('GET_BIO_DETAILS', payload)
       }
     },
     setPageType (pageType) {
@@ -231,8 +231,8 @@ export default {
         this.searchCandidates(this.initialSearchQuery)
       }
     },
-    resetAlbumTracks () {
-      this.$store.commit('RESET_ALBUM_TRACKS')
+    resetBioDetails () {
+      this.$store.commit('RESET_BIO_DETAILS')
     },
     replaceArtworkUrlSize (albumArtwork, newSize) {
       return albumArtwork.replace('100x100', newSize)

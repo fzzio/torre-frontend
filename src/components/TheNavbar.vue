@@ -106,7 +106,7 @@ export default {
       this.$emit('clickTitle')
     },
     onClickCandidateUsername (username) {
-      this.$emit('clickCandidateName', username)
+      this.$emit('clickCandidateUsername', username)
     }
 
   }

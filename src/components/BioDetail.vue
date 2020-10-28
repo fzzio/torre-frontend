@@ -1,9 +1,9 @@
 <template>
 <div  class="modal-card" style="width: auto; max-width: 980px; height: auto; max-height: 700px"  >
     <header class="modal-card-head">
-      <p class="modal-card-title" v-if="candidateInfo"><strong>{{candidateInfo.collectionCensoredName}} candidate</strong></p>
+      <p class="modal-card-title" v-if="candidateInfo"><strong>{{candidateInfo.username}} candidate</strong></p>
     </header>
-  <section class="modal-card-body">
+    <!-- <section class="modal-card-body">
       <div class="columns is-multiline">
         <div v-if="candidateInfo" class="column is-12">
           <article class="media media-modal">
@@ -71,7 +71,7 @@
           </b-table>
         </div>
       </div>
-    </section>
+    </section> -->
     <footer class="modal-card-foot">
       <button class="button" type="button" @click="$parent.close()">Close</button>
     </footer>
@@ -82,7 +82,7 @@
 export default {
   name: 'TrackList',
   props: {
-    albumTracks: {
+    bioDetails: {
       type: Array,
       required: true
     },
@@ -113,11 +113,11 @@ export default {
   },
   methods: {
     showAlbumTrackList () {
-      this.albumTracks.shift()
-      this.albumTrackList = this.albumTracks
+      this.bioDetails.shift()
+      this.albumTrackList = this.bioDetails
     },
     showCandidateInfo () {
-      this.candidateInfo = this.albumTracks[0]
+      this.candidateInfo = this.bioDetails.basicBio
     },
     onSort (field, order) {
       this.sortField = field
